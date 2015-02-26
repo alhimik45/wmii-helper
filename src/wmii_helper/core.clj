@@ -9,6 +9,8 @@
   (:gen-class))
 
 (def reactions (atom {}))
+(def plugin-defs {:wallpapers wallpapers/init
+                  :player player/init})
 
 (defn add-reaction [command callback]
   (swap! reactions assoc command callback))
@@ -27,18 +29,11 @@
           (binding [*out* *err*]
             (println "Error when process command: " (.getMessage e))))))))
 
-
 (add-reaction "exit" (fn [args] (System/exit 0)))
-(add-reaction "wallpaper-next" (fn [args] (wallpapers/next)))
-(add-reaction "player-next" (fn [args] (player/next)))
-(add-reaction "player-pause" (fn [args] (player/pause)))
-(add-reaction "player-loop" (fn [args] (player/toggle-loop)))
-(add-reaction "player-play-file" (fn [args] (player/play (:path args))))
-
 
 (defn -main [& args]
   (s/init)
-  (wallpapers/init)
-  (player/init)
+  (doseq [plugin (:plugins @s/settings)]
+    (swap! reactions merge ((plugin-defs plugin))))
   (while true
     (exec (slurp (:fifo-in @s/settings)))))

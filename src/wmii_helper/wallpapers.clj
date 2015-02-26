@@ -35,4 +35,5 @@
    (while true
      (set-wallpaper (nth @wallpapers @current-wallpaper-idx))
      (alts!! [user-call (timeout (* 60000 (:switch-time @s/settings)))])
-     (swap! current-wallpaper-idx inc-idx))))
+     (swap! current-wallpaper-idx inc-idx)))
+  {"wallpaper-next" (fn [args] (next))})

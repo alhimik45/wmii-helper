@@ -6,7 +6,8 @@ Config example:
 ---------------
 
 ```clojure
-{  :images-folder "/path/to" ; folder with wallpaper images
+{  :plugins [:wallpapers :player] ; what functionality do you need
+   :images-folder "/path/to" ; folder with wallpaper images
    :music-folder "/path/to"  ; folder with music
    :switch-time 30           ; timeout for switching wallpaper
    :sound-bar "/rbar/sound"  ; wmii bar for output current song name

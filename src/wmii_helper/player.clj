@@ -66,4 +66,8 @@
    (<!! next-call)
    (while true
      (play-file (rand-nth @music))
-     (<!! next-call))))
+     (<!! next-call)))
+  {"player-next" (fn [args] (next))
+   "player-pause" (fn [args] (pause))
+   "player-loop" (fn [args] (toggle-loop))
+   "player-play-file" (fn [args] (play (:path args)))})
