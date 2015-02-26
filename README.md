@@ -23,7 +23,7 @@ Available commands:
  - `player-next` - start next random song
  - `player-pause` - pause player
  - `player-loop` - infinitely play current song / disable infinite loop
- - `player-play-file {:path "/path/to/song"}` - plays concrete file
+ - `player-play-file {:path "/path/to/song"}` - plays concrete file, path can be an url
 
 Usage example:
 -------

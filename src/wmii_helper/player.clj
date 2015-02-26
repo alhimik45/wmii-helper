@@ -2,14 +2,19 @@
   (:refer-clojure :exclude [next])
   (:import java.lang.Runtime)
   (:use clojure.java.io
+        [clojure.string :only [split]]
         [clojure.java.shell :only [sh]])
   (:require [wmii-helper.settings :as s]
             [clojure.core.async :as async :refer [chan >!! <!! thread]]
             [clojure-watch.core :refer [start-watch]]))
 
 (defn all-music []
-  (filter #(.isFile %)
-          (file-seq (file (:music-folder @s/settings)))))
+  (->> @s/settings
+       :music-folder
+       file
+       file-seq
+       (filter #(.isFile %))
+       (map #(.getAbsolutePath %))))
 (def current-music-process (atom nil))
 (def music (atom nil))
 (def loop-enabled (atom nil))
@@ -31,13 +36,13 @@
                      (str "file=" (:mplayer-fifo-in @s/settings))
                      "-really-quiet"
                      "-slave"
-                     (.getAbsolutePath file)]))]
+                     file]))]
     (when @current-music-process
       (.destroy @current-music-process))
     (reset! current-music-process process)
     (when-not (= "" sound-bar)
       (sh "wmiir" "xwrite" sound-bar (str "label "
-                                          (subs (.getName file) 0 (min 40 (count (.getName file))))
+                                          (subs (last (split file #"/")) 0 (min 40 (count (last (split file #"/")))))
                                           "...")))
     (thread
      (when (= 0 (.waitFor process)) ; run next only when sound ends, but not when user switch
@@ -49,7 +54,7 @@
     (next)))
 
 (defn play [path]
-  (play-file (file path)))
+  (play-file path))
 
 (defn toggle-loop []
   (if @loop-enabled
