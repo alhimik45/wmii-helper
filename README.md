@@ -10,6 +10,7 @@ Config example:
    :images-folder "/path/to" ; folder with wallpaper images
    :music-folder "/path/to"  ; folder with music
    :switch-time 30           ; timeout for switching wallpaper
+   :player-cache 20          ; mplayer -cache-min option
    :sound-bar "/rbar/sound"  ; wmii bar for output current song name
    :mplayer-fifo-in "/tmp/.wmii-helper-mplayer-in"  ; fifo used by program to control mplayer
    :fifo-in "/tmp/.wmii-helper-in"} ; fifo used by wmii to control program

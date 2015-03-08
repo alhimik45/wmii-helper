@@ -8,6 +8,7 @@
   {:images-folder "."
    :music-folder "."
    :switch-time 30 ;;minutes
+   :player-cache 20 ;; mplayer -cache-min option
    ; wmii bar for output current song
    :sound-bar "/rbar/sound"
    ; input/output fifos
