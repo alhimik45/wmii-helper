@@ -26,24 +26,28 @@
 (defn next []
   (>!! next-call 0))
 
-(defn play-file [file]
+(defn play-file [file-path]
   (reset! loop-enabled nil)
   (let [sound-bar (:sound-bar @s/settings)
+        filename (last (split file-path #"/"))
         process (. (Runtime/getRuntime) exec
                    (into-array
+                    (concat
                     ["mplayer"
                      "-input"
                      (str "file=" (:mplayer-fifo-in @s/settings))
                      "-cache-min" (str (:player-cache @s/settings))
                      "-really-quiet"
-                     "-slave"
-                     file]))]
+                     "-slave"]
+                     (if (= (last (split filename #"\.")) "m3u") ;; if it is playlist
+                       ["-playlist" file-path]
+                       [file-path]))))]
     (when @current-music-process
       (.destroy @current-music-process))
     (reset! current-music-process process)
     (when-not (= "" sound-bar)
       (sh "wmiir" "xwrite" sound-bar (str "label "
-                                          (subs (last (split file #"/")) 0 (min 40 (count (last (split file #"/")))))
+                                          (subs filename 0 (min 40 (count filename)))
                                           "...")))
     (thread
      (when (= 0 (.waitFor process)) ; run next only when sound ends, but not when user switch
