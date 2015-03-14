@@ -8,7 +8,7 @@ Config example:
 ```clojure
 {  :plugins [:wallpapers :player] ; what functionality do you need
    :images-folder "/path/to" ; folder with wallpaper images
-   :music-folder "/path/to"  ; folder with music
+   :music-folder "/path/to"  ; default folder with music
    :switch-time 30           ; timeout for switching wallpaper
    :player-cache 20          ; mplayer -cache-min option
    :sound-bar "/rbar/sound"  ; wmii bar for output current song name
@@ -25,6 +25,7 @@ Available commands:
  - `player-pause` - pause player
  - `player-loop` - infinitely play current song / disable infinite loop
  - `player-play-file {:path "/path/to/song"}` - plays concrete file, path can be an url or playlist(.m3u extension)
+ - `player-change-folder {:path "/path/to/music"}` - change music folder dynamically
 
 Usage example:
 -------

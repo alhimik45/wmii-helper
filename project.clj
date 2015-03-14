@@ -1,4 +1,4 @@
-(defproject wmii-helper "1.0.0-SNAPSHOT"
+(defproject wmii-helper "1.1.0-SNAPSHOT"
   :description "Dynamic wallpapers and mplayer wrapper for wmii"
   :main wmii-helper.core
   :aot :all

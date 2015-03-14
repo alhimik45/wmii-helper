@@ -8,17 +8,27 @@
             [clojure.core.async :as async :refer [chan >!! <!! thread]]
             [clojure-watch.core :refer [start-watch]]))
 
-(defn all-music []
-  (->> @s/settings
-       :music-folder
-       file
-       file-seq
-       (filter #(.isFile %))
-       (map #(.getAbsolutePath %))))
 (def current-music-process (atom nil))
+(def folder-watcher (atom nil))
 (def music (atom nil))
 (def loop-enabled (atom nil))
 (def next-call (chan))
+
+(defn all-music [path]
+  (->> path
+       file
+       file-seq
+       (filter #(and (.isFile %)
+                     (= (.getParent %) path))) ; do not check subdirectories
+       (map #(.getAbsolutePath %))))
+
+(defn init-filesystem [path]
+  (when @folder-watcher (@folder-watcher))
+  (reset! music (all-music path))
+  (reset! folder-watcher
+          (start-watch [{:path path
+                         :event-types [:create :modify :delete]
+                         :callback (fn [event filename] (reset! music (all-music path)))}])))
 
 (defn command [cmd]
   (spit (:mplayer-fifo-in @s/settings) (str cmd "\n")))
@@ -33,12 +43,12 @@
         process (. (Runtime/getRuntime) exec
                    (into-array
                     (concat
-                    ["mplayer"
-                     "-input"
-                     (str "file=" (:mplayer-fifo-in @s/settings))
-                     "-cache-min" (str (:player-cache @s/settings))
-                     "-really-quiet"
-                     "-slave"]
+                     ["mplayer"
+                      "-input"
+                      (str "file=" (:mplayer-fifo-in @s/settings))
+                      "-cache-min" (str (:player-cache @s/settings))
+                      "-really-quiet"
+                      "-slave"]
                      (if (= (last (split filename #"\.")) "m3u") ;; if it is playlist
                        ["-playlist" file-path]
                        [file-path]))))]
@@ -58,8 +68,9 @@
     (command "pause")
     (next)))
 
-(defn play [path]
-  (play-file path))
+(defn change-folder [path]
+  (init-filesystem path)
+  (next))
 
 (defn toggle-loop []
   (if @loop-enabled
@@ -68,10 +79,7 @@
   (swap! loop-enabled not))
 
 (defn init []
-  (reset! music (all-music))
-  (start-watch [{:path (:music-folder @s/settings)
-                 :event-types [:create :modify :delete]
-                 :callback (fn [event filename] (reset! music (all-music)))}])
+  (init-filesystem (:music-folder @s/settings))
   (thread
    (<!! next-call)
    (while true
@@ -80,4 +88,5 @@
   {"player-next" (fn [args] (next))
    "player-pause" (fn [args] (pause))
    "player-loop" (fn [args] (toggle-loop))
-   "player-play-file" (fn [args] (play (:path args)))})
+   "player-play-file" (fn [args] (play-file (:path args)))
+   "player-change-folder" (fn [args] (change-folder (:path args)))})
