@@ -17,13 +17,14 @@
 (defn all-music [path]
   (->> path
        file
-       file-seq
-       (filter #(and (.isFile %)
-                     (= (.getParent %) path))) ; do not check subdirectories
+       .listFiles
+       vec
+       (filter #(.isFile %))
        (map #(.getAbsolutePath %))))
 
 (defn init-filesystem [path]
   (when @folder-watcher (@folder-watcher))
+  (spit (:player-current-folder @s/settings) path)
   (reset! music (all-music path))
   (reset! folder-watcher
           (start-watch [{:path path

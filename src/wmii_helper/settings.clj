@@ -11,6 +11,8 @@
    :player-cache 20 ;; mplayer -cache-min option
    ; wmii bar for output current song
    :sound-bar "/rbar/sound"
+   ; file that stores current folder of player
+   :player-current-folder "/tmp/.wmii-helper-player-folder"
    ; input/output fifos
    :mplayer-fifo-in "/tmp/.wmii-helper-mplayer-in"
    :fifo-in "/tmp/.wmii-helper-in"})
