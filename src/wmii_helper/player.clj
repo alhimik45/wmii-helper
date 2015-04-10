@@ -84,7 +84,8 @@
   (thread
    (<!! next-call)
    (while true
-     (play-file (rand-nth @music))
+     (when (seq @music)
+       (play-file (rand-nth @music)))
      (<!! next-call)))
   {"player-next" (fn [args] (next))
    "player-pause" (fn [args] (pause))
