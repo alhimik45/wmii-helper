@@ -8,7 +8,7 @@
   {:images-folder "."
    :music-folder "."
    :switch-time 30 ;;minutes
-   :player-cache 20 ;; mplayer -cache-min option
+   :mplayer-options [] ;; additional options for mplayer
    ; wmii bar for output current song
    :sound-bar "/rbar/sound"
    ; file that stores current folder of player

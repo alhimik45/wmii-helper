@@ -47,9 +47,9 @@
                      ["mplayer"
                       "-input"
                       (str "file=" (:mplayer-fifo-in @s/settings))
-                      "-cache-min" (str (:player-cache @s/settings))
                       "-really-quiet"
                       "-slave"]
+                     (:mplayer-options @s/settings)
                      (if (= (last (split filename #"\.")) "m3u") ;; if it is playlist
                        ["-playlist" file-path]
                        [file-path]))))]
