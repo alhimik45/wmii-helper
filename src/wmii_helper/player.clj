@@ -79,6 +79,12 @@
     (command "loop 1"))
   (swap! loop-enabled not))
 
+(defn increase-volume []
+  (command "volume 100"))
+
+(defn decrease-volume []
+  (command "volume 0"))
+
 (defn init []
   (init-filesystem (:music-folder @s/settings))
   (thread
@@ -91,4 +97,6 @@
    "player-pause" (fn [args] (pause))
    "player-loop" (fn [args] (toggle-loop))
    "player-play-file" (fn [args] (play-file (:path args)))
+   "player-increase-volume" (fn [args] (increase-volume))
+   "player-decrease-volume" (fn [args] (decrease-volume))
    "player-change-folder" (fn [args] (change-folder (:path args)))})
