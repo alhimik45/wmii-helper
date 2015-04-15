@@ -11,6 +11,7 @@
    :mplayer-options [] ;; additional options for mplayer
    ; wmii bar for output current song
    :sound-bar "/rbar/sound"
+   :player-seek-seconds 10 ;; seconds of relative seek
    ; file that stores current folder of player
    :player-current-folder "/tmp/.wmii-helper-player-folder"
    ; input/output fifos
