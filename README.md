@@ -1,4 +1,5 @@
 Switchable wallpapers (by timeout or shortcut) and mplayer wrapper for wmii.
+If JVM too heavy for you, use [wmii-player](https://github.com/alhimik45/wmii-player) and [wmii-wallpaper](https://github.com/alhimik45/wmii-wallpaper) instead.
 Application is controlled by named pipe.
 It uses config file for settings, config must place in folder with program with name `settings.edn`
 
@@ -11,6 +12,7 @@ Config example:
    :music-folder "/path/to"  ; default folder with music
    :switch-time 30           ; timeout for switching wallpaper
    :mplayer-options ["-cache-min" "20"]     ; additional options for mplayer
+   :player-seek-seconds 10   ; seconds of relative seek
    :sound-bar "/rbar/sound"  ; wmii bar for output current song name
    :player-current-folder "/tmp/.wmii-helper-player-folder" ; file that stores current folder of player
    :mplayer-fifo-in "/tmp/.wmii-helper-mplayer-in"  ; fifo used by program to control mplayer
@@ -27,6 +29,10 @@ Available commands:
  - `player-loop` - infinitely play current song / disable infinite loop
  - `player-play-file {:path "/path/to/song"}` - plays concrete file, path can be an url or playlist(.m3u extension)
  - `player-change-folder {:path "/path/to/music"}` - change music folder dynamically
+ - `seek-forward` - seek forward to `player-seek-seconds` seconds
+ - `seek-forward` - seek backward to `player-seek-seconds` seconds
+ - `increase-volume`
+ - `decrease-volume`
 
 Usage example:
 -------
